@@ -9,10 +9,10 @@ if test x$HAVE_CURS != xyes; then
   AC_MSG_ERROR([hog requires the curses or ncurses library. Please install before compiling hog.])
 fi
 
-MP_WITH_CDK
-HAVE_CDK=$mp_cv_cdk
-if test x$HAVE_CDK != xyes; then
-  AC_MSG_ERROR([hog requires the Curses Development Kit library. Please install before compiling hog.])
+MP_WITH_NEWT
+HAVE_NEWT=$mp_cv_newt
+if test x$HAVE_NEWT != xyes; then
+  AC_MSG_ERROR([hog requires the Newt library. Please install before compiling hog.])
 fi
 
 AC_CONFIG_FILES([
