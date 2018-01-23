@@ -30,5 +30,5 @@ AC_DEFUN([MP_WITH_NEWT], [
     NEWT_LIB="-lnewt"
     mp_cv_newt=yes
   fi
-  LIBS="$LIBS -lnewt"
+  LIBS="$mp_save_LIBS -lnewt"
 ])dnl
