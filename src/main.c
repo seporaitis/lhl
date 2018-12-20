@@ -1,55 +1,36 @@
-#include <config.h>
-#include <ncurses.h>
-#include <panel.h>
-#include <stdio.h>
+#include <newt.h>
 #include <stdlib.h>
-#include <termios.h>
 #include <unistd.h>
 
-#include "hamlog.h"
-#include "terminal.h"
+#include "config.h"
 
 
-static WINDOW *win;
-static PANEL *panel;
+char message[] = ("This is a pretty long message. It will be displayed "
+                  "in a newt textbox, and illustrates how to construct "
+                  "a textbox from arbitrary text which may not have "
+                  "very good line breaks.\n\n"
+                  "Notice how literal \\n characters are respected, and "
+                  "may be used to force line breaks and blank lines.");
 
-
-void
-wnicebox(WINDOW *win, int y, int x, int height, int width, char *boxname) {
-  height += 1;
-  width += 1;
-
-  wattrset(win, COLOR_PAIR(C_BORDER) | A_BOLD);
-
-  mvwaddch(win, y, x, ACS_ULCORNER);
-  whline(win, ACS_HLINE, width);
-  mvwaddch(win, y, x + width, ACS_URCORNER);
-  mvwaddch(win, y + height, x, ACS_LLCORNER);
-  whline(win, ACS_HLINE, width);
-  mvwaddch(win, y + height, x + width, ACS_LRCORNER);
-  mvwvline(win, y + 1, x + width, ACS_VLINE, height - 1);
-  mvwvline(win, y + 1, x, ACS_VLINE, height - 1);
-  mvwprintw(win, y, x + 2, boxname);
-}
-
-
-int main(int argc, char *argv[])
+int main(void)
 {
-  term_init();
-  term_setup_color();
+  newtComponent form, text, button;
 
-  win = newwin(11, 39, 1, 41);
-  panel = new_panel(win);
-  show_panel(panel);
-  top_panel(panel);
+  newtInit();
+  newtCls();
 
-  wnicebox(win, 0, 0, 12, 38, "HELP");
+  text = newtTextboxReflowed(1, 1, message, 30, 5, 5, 0);
+  button = newtButton(12, newtTextboxGetNumLines(text) + 2, "Ok");
 
-  wrefresh(win);
+  newtOpenWindow(10, 5, 37,
+                 newtTextboxGetNumLines(text) + 7, "Textboxes");
 
-  getch();
+  form = newtForm(NULL, NULL, 0);
+  newtFormAddComponents(form, text, button, NULL);
 
-  term_close();
+  newtRunForm(form);
+  newtFormDestroy(form);
+  newtFinished();
 
   return 0;
 }

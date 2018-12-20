@@ -67,3 +67,4 @@ stamp-h1
 *.log
 *.tar.gz
 .deps
+.bmdata.dat

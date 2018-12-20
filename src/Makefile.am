@@ -1,3 +1,3 @@
-AM_LDFLAGS = -lncurses -lpanel
-bin_PROGRAMS = hog
-hog_SOURCES = main.c terminal.c
+AM_LDFLAGS = -lnewt -lpanel
+bin_PROGRAMS = lylog
+lylog_SOURCES = main.c
