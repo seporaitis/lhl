@@ -30,36 +30,40 @@ typedef enum {
 typedef struct {
   FIELD *field[QSOF_MAX + 1];
   FORM *form;
+  WINDOW *win;
 } qsoform_t;
 
 
 qsoform_t *new_qsoform() {
   qsoform_t *obj = (qsoform_t *)malloc(sizeof(qsoform_t));
+  int cols, rows;
 
-  obj->field[QSOF_TIMESTAMP] = new_field(1, 17, 10, 1, 0, 0);
+  obj->field[QSOF_TIMESTAMP] = new_field(1, 17, 1, 1, 0, 0);
   set_field_back(obj->field[QSOF_TIMESTAMP], COLOR_PAIR(1));
   set_field_fore(obj->field[QSOF_TIMESTAMP], COLOR_PAIR(1));
   field_opts_off(obj->field[QSOF_TIMESTAMP], O_AUTOSKIP | O_ACTIVE | O_EDIT);
 
-  obj->field[QSOF_MODE] = new_field(1, 5, 10, 20, 0, 0);
+  obj->field[QSOF_MODE] = new_field(1, 5, 1, 20, 0, 0);
   set_field_back(obj->field[QSOF_MODE], COLOR_PAIR(1));
   set_field_fore(obj->field[QSOF_MODE], COLOR_PAIR(1));
   field_opts_off(obj->field[QSOF_MODE], O_AUTOSKIP | O_ACTIVE | O_EDIT);
+  set_field_buffer(obj->field[QSOF_MODE], 0, "CW");
 
-  obj->field[QSOF_BAND] = new_field(1, 8, 10, 26, 0, 0);
+  obj->field[QSOF_BAND] = new_field(1, 8, 1, 26, 0, 0);
   set_field_back(obj->field[QSOF_BAND], COLOR_PAIR(1));
   set_field_fore(obj->field[QSOF_BAND], COLOR_PAIR(1));
   field_opts_off(obj->field[QSOF_BAND], O_AUTOSKIP | O_ACTIVE | O_EDIT);
+  set_field_buffer(obj->field[QSOF_BAND], 0, "40M");
 
-  obj->field[QSOF_CALLSIGN] = new_field(1, 10, 10, 35, 0, 0);
+  obj->field[QSOF_CALLSIGN] = new_field(1, 10, 1, 35, 0, 0);
   set_field_back(obj->field[QSOF_CALLSIGN], A_UNDERLINE);
   field_opts_off(obj->field[QSOF_CALLSIGN], O_AUTOSKIP);
 
-  obj->field[QSOF_RSTSENT] = new_field(1, 4, 10, 46, 0, 0);
+  obj->field[QSOF_RSTSENT] = new_field(1, 4, 1, 46, 0, 0);
   set_field_back(obj->field[QSOF_RSTSENT], A_UNDERLINE);
   field_opts_off(obj->field[QSOF_RSTSENT], O_AUTOSKIP);
 
-  obj->field[QSOF_RSTRCVD] = new_field(1, 4, 10, 51, 0, 0);
+  obj->field[QSOF_RSTRCVD] = new_field(1, 4, 1, 51, 0, 0);
   set_field_back(obj->field[QSOF_RSTRCVD], A_UNDERLINE);
   field_opts_off(obj->field[QSOF_RSTRCVD], O_AUTOSKIP);
 
@@ -67,11 +71,23 @@ qsoform_t *new_qsoform() {
 
   obj->form = new_form(obj->field);
 
+  scale_form(obj->form, &rows, &cols);
+
+  obj->win = newwin(rows + 2, COLS - 3, 20, 1);
+  keypad(obj->win, TRUE);
+
+  set_form_win(obj->form, obj->win);
+  set_form_sub(obj->form, derwin(obj->win, rows, cols + 1, 1, 1));
+
+  box(obj->win, 0, 0);
+
   return obj;
 }
 
 
 void free_qsoform(qsoform_t *obj) {
+  delwin(obj->win);
+
   free_form(obj->form);
 
   free_field(obj->field[QSOF_TIMESTAMP]);
@@ -107,30 +123,31 @@ int main(void)
   //bkgd(COLOR_PAIR(1));
 
   qsoform = new_qsoform();
-  set_field_buffer(qsoform->field[QSOF_MODE], 0, "CW");
-  set_field_buffer(qsoform->field[QSOF_BAND], 0, "40M");
+  refresh();
 
   post_form(qsoform->form);
-  refresh();
-  attron(COLOR_PAIR(2) | A_BOLD);
-  mvprintw(9, 1, "Date");
-  mvprintw(9, 13, "Time");
-  mvprintw(9, 20, "Mode");
-  mvprintw(9, 26, "Band");
-  mvprintw(9, 35, "Callsign");
-  mvprintw(9, 46, "Sent");
-  mvprintw(9, 51, "Rcvd");
-  refresh();
-  attroff(COLOR_PAIR(2) | A_BOLD);
+  wrefresh(qsoform->win);
 
+  wattron(qsoform->win, COLOR_PAIR(2) | A_BOLD);
+  mvwprintw(qsoform->win, 1, 2, "Date");
+  mvwprintw(qsoform->win, 1, 14, "Time");
+  mvwprintw(qsoform->win, 1, 21, "Mode");
+  mvwprintw(qsoform->win, 1, 27, "Band");
+  mvwprintw(qsoform->win, 1, 36, "Callsign");
+  mvwprintw(qsoform->win, 1, 47, "Sent");
+  mvwprintw(qsoform->win, 1, 52, "Rcvd");
+  wattroff(qsoform->win, COLOR_PAIR(2) | A_BOLD);
+  wrefresh(qsoform->win);
+  refresh();
 
   while (1) {
     ch = getch();
 
     time(&rawtime);
     timeinfo = localtime(&rawtime);
-    strftime(buf, sizeof(buf) - 1, "%Y-%b-%d %H:%M", timeinfo);
+    strftime(buf, sizeof(buf) - 1, "%Y %b %d %H:%M", timeinfo);
     set_field_buffer(qsoform->field[QSOF_TIMESTAMP], 0, buf);
+    wrefresh(qsoform->win);
 
     if (ch == ERR) {
       continue;
