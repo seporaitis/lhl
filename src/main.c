@@ -81,11 +81,28 @@ qsoform_t *new_qsoform() {
 
   box(obj->win, 0, 0);
 
+  post_form(obj->form);
+
+  wattron(obj->win, COLOR_PAIR(2) | A_BOLD);
+  mvwprintw(obj->win, 1, 2, "Date");
+  mvwprintw(obj->win, 1, 14, "Time");
+  mvwprintw(obj->win, 1, 21, "Mode");
+  mvwprintw(obj->win, 1, 27, "Band");
+  mvwprintw(obj->win, 1, 36, "Callsign");
+  mvwprintw(obj->win, 1, 47, "Sent");
+  mvwprintw(obj->win, 1, 52, "Rcvd");
+  wattroff(obj->win, COLOR_PAIR(2) | A_BOLD);
+
+  refresh();
+  wrefresh(obj->win);
+
   return obj;
 }
 
 
 void free_qsoform(qsoform_t *obj) {
+  unpost_form(obj->form);
+
   delwin(obj->win);
 
   free_form(obj->form);
@@ -123,20 +140,6 @@ int main(void)
   //bkgd(COLOR_PAIR(1));
 
   qsoform = new_qsoform();
-  refresh();
-
-  post_form(qsoform->form);
-  wrefresh(qsoform->win);
-
-  wattron(qsoform->win, COLOR_PAIR(2) | A_BOLD);
-  mvwprintw(qsoform->win, 1, 2, "Date");
-  mvwprintw(qsoform->win, 1, 14, "Time");
-  mvwprintw(qsoform->win, 1, 21, "Mode");
-  mvwprintw(qsoform->win, 1, 27, "Band");
-  mvwprintw(qsoform->win, 1, 36, "Callsign");
-  mvwprintw(qsoform->win, 1, 47, "Sent");
-  mvwprintw(qsoform->win, 1, 52, "Rcvd");
-  wattroff(qsoform->win, COLOR_PAIR(2) | A_BOLD);
   wrefresh(qsoform->win);
   refresh();
 
@@ -200,7 +203,6 @@ int main(void)
   }
 
  quit:
-  unpost_form(qsoform->form);
   free_qsoform(qsoform);
 
   endwin();
