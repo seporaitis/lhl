@@ -56,7 +56,7 @@ Makefile
 aclocal.m4
 autom4te.cache
 compile
-config.h
+config.h*
 config.status
 configure
 depcomp
@@ -68,3 +68,6 @@ stamp-h1
 *.tar.gz
 .deps
 .bmdata.dat
+
+# Lylog binaries
+src/lylog

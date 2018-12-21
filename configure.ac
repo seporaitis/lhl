@@ -9,12 +9,6 @@ if test x$HAVE_CURS != xyes; then
   AC_MSG_ERROR([lylog requires the curses or ncurses library. Please install before compiling lylog.])
 fi
 
-MP_WITH_NEWT
-HAVE_NEWT=$mp_cv_newt
-if test x$HAVE_NEWT != xyes; then
-  AC_MSG_ERROR([lylog requires the Newt library. Please install before compiling lylog.])
-fi
-
 AC_CONFIG_FILES([
   Makefile
   src/Makefile
