@@ -11,7 +11,7 @@ Start simple and gradually add additional features if there is an interest.
 
 List of minimum requirements:
 
-- come up with a normal name
+- come up with a normal name for this project
 - allow basic input about a qso
   - timestamp (date + time)
   - mode
@@ -19,8 +19,8 @@ List of minimum requirements:
   - callsign
   - rst sent
   - rst rcvd
-- show these inputs in a list on screen
 - save and load log files
+- show these inputs in a list on screen
 - support log files
 
 Anything else can go afterwards:
