@@ -1,4 +1,5 @@
 #include <newt.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -54,9 +55,9 @@ int main(void)
   newtComponent mode = newtLabel(8, 14, "CW");
   newtComponent timestamp = newtLabel(16, 14, "20-Dec-18 22:00");
   newtComponent counter = newtLabel(34, 14, "0002");
-  newtComponent callsign = newtEntry(40, 14, "", 10, &callsignVal, 0);
-  newtComponent rstSent = newtEntry(52, 14, "599", 10, &rstSentVal, 0);
-  newtComponent rstRcvd = newtEntry(60, 14, "599", 10, &rstRcvdVal, 0);
+  newtComponent callsign = newtEntry(40, 14, "", 10, &callsignVal[0], 0);
+  newtComponent rstSent = newtEntry(52, 14, "599", 10, &rstSentVal[0], 0);
+  newtComponent rstRcvd = newtEntry(60, 14, "599", 10, &rstRcvdVal[0], 0);
   newtFormAddComponents(form, band, mode, timestamp, counter, callsign, rstSent, rstRcvd, NULL);
   newtComponentAddCallback(rstRcvd, updateCallLog, &callog);
   newtFormRun(form, NULL);
