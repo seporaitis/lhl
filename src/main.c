@@ -37,26 +37,29 @@ qsoform_t *new_qsoform() {
   qsoform_t *obj = (qsoform_t *)malloc(sizeof(qsoform_t));
 
   obj->field[QSOF_TIMESTAMP] = new_field(1, 17, 10, 1, 0, 0);
-  set_field_back(obj->field[QSOF_TIMESTAMP], A_UNDERLINE);
+  set_field_back(obj->field[QSOF_TIMESTAMP], COLOR_PAIR(1));
+  set_field_fore(obj->field[QSOF_TIMESTAMP], COLOR_PAIR(1));
   field_opts_off(obj->field[QSOF_TIMESTAMP], O_AUTOSKIP | O_ACTIVE | O_EDIT);
 
-  obj->field[QSOF_MODE] = new_field(1, 10, 10, 19, 0, 0);
-  set_field_back(obj->field[QSOF_MODE], A_UNDERLINE);
-  field_opts_off(obj->field[QSOF_MODE], O_AUTOSKIP);
+  obj->field[QSOF_MODE] = new_field(1, 5, 10, 20, 0, 0);
+  set_field_back(obj->field[QSOF_MODE], COLOR_PAIR(1));
+  set_field_fore(obj->field[QSOF_MODE], COLOR_PAIR(1));
+  field_opts_off(obj->field[QSOF_MODE], O_AUTOSKIP | O_ACTIVE | O_EDIT);
 
-  obj->field[QSOF_BAND] = new_field(1, 10, 10, 30, 0, 0);
-  set_field_back(obj->field[QSOF_BAND], A_UNDERLINE);
-  field_opts_off(obj->field[QSOF_BAND], O_AUTOSKIP);
+  obj->field[QSOF_BAND] = new_field(1, 8, 10, 26, 0, 0);
+  set_field_back(obj->field[QSOF_BAND], COLOR_PAIR(1));
+  set_field_fore(obj->field[QSOF_BAND], COLOR_PAIR(1));
+  field_opts_off(obj->field[QSOF_BAND], O_AUTOSKIP | O_ACTIVE | O_EDIT);
 
-  obj->field[QSOF_CALLSIGN] = new_field(1, 10, 10, 41, 0, 0);
+  obj->field[QSOF_CALLSIGN] = new_field(1, 10, 10, 35, 0, 0);
   set_field_back(obj->field[QSOF_CALLSIGN], A_UNDERLINE);
   field_opts_off(obj->field[QSOF_CALLSIGN], O_AUTOSKIP);
 
-  obj->field[QSOF_RSTSENT] = new_field(1, 4, 10, 52, 0, 0);
+  obj->field[QSOF_RSTSENT] = new_field(1, 4, 10, 46, 0, 0);
   set_field_back(obj->field[QSOF_RSTSENT], A_UNDERLINE);
   field_opts_off(obj->field[QSOF_RSTSENT], O_AUTOSKIP);
 
-  obj->field[QSOF_RSTRCVD] = new_field(1, 4, 10, 57, 0, 0);
+  obj->field[QSOF_RSTRCVD] = new_field(1, 4, 10, 51, 0, 0);
   set_field_back(obj->field[QSOF_RSTRCVD], A_UNDERLINE);
   field_opts_off(obj->field[QSOF_RSTRCVD], O_AUTOSKIP);
 
@@ -93,14 +96,33 @@ int main(void)
 
   /* Initialize ncurses. */
   initscr();
+  start_color();
   cbreak();
   noecho();
   keypad(stdscr, TRUE);
   nodelay(stdscr, TRUE);
 
+  init_pair(1, COLOR_WHITE, COLOR_BLACK);
+  init_pair(2, COLOR_RED, COLOR_BLACK);
+  //bkgd(COLOR_PAIR(1));
+
   qsoform = new_qsoform();
+  set_field_buffer(qsoform->field[QSOF_MODE], 0, "CW");
+  set_field_buffer(qsoform->field[QSOF_BAND], 0, "40M");
+
   post_form(qsoform->form);
   refresh();
+  attron(COLOR_PAIR(2) | A_BOLD);
+  mvprintw(9, 1, "Date");
+  mvprintw(9, 13, "Time");
+  mvprintw(9, 20, "Mode");
+  mvprintw(9, 26, "Band");
+  mvprintw(9, 35, "Callsign");
+  mvprintw(9, 46, "Sent");
+  mvprintw(9, 51, "Rcvd");
+  refresh();
+  attroff(COLOR_PAIR(2) | A_BOLD);
+
 
   while (1) {
     ch = getch();
