@@ -74,7 +74,7 @@ qsoform_t *new_qsoform() {
 
   scale_form(obj->form, &rows, &cols);
 
-  obj->win = newwin(rows + 2, COLS - 3, 20, 1);
+  obj->win = newwin(rows + 2, COLS, 20, 0);
   keypad(obj->win, TRUE);
 
   obj->panel = new_panel(obj->win);
@@ -149,6 +149,7 @@ int main(void)
     set_field_buffer(qsoform->field[QSOF_TIMESTAMP], 0, buf);
 
     if (ch == ERR) {
+      napms(25);
       continue;
     }
 
