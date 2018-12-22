@@ -148,6 +148,10 @@ int main(void)
     strftime(buf, sizeof(buf) - 1, "%Y %b %d %H:%M", timeinfo);
     set_field_buffer(qsoform->field[QSOF_TIMESTAMP], 0, buf);
 
+    /* Refresh UI. */
+    update_panels();
+    doupdate();
+
     if (ch == ERR) {
       napms(25);
       continue;
@@ -198,9 +202,6 @@ int main(void)
       break;
     }
 
-    /* Refresh UI. */
-    update_panels();
-    doupdate();
   }
 
  quit:
