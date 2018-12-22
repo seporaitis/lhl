@@ -103,6 +103,8 @@ qsoform_t *new_qsoform() {
 void free_qsoform(qsoform_t *obj) {
   unpost_form(obj->form);
 
+  del_panel(obj->panel);
+
   delwin(obj->win);
 
   free_form(obj->form);
@@ -120,9 +122,12 @@ void free_qsoform(qsoform_t *obj) {
 
 int main(void)
 {
+  PANEL *panel;
+  WINDOW *win, *pad;
   qsoform_t *qsoform;
   int ch;
   char buf[24] = {0};
+  char qsolist[2048] = {0};
   time_t rawtime;
   struct tm *timeinfo;
 
@@ -140,6 +145,13 @@ int main(void)
 
   qsoform = new_qsoform();
 
+  win = newwin(20, COLS, 0, 0);
+  keypad(win, TRUE);
+  panel = new_panel(win);
+  box(win, 0, 0);
+  pad = newpad(18, COLS - 2);
+  touchwin(win);
+
   while (1) {
     ch = getch();
 
@@ -148,9 +160,12 @@ int main(void)
     strftime(buf, sizeof(buf) - 1, "%Y %b %d %H:%M", timeinfo);
     set_field_buffer(qsoform->field[QSOF_TIMESTAMP], 0, buf);
 
+    mvwaddstr(pad, 0, 0, qsolist);
+
     /* Refresh UI. */
     update_panels();
     doupdate();
+    prefresh(pad, 0, 0, 1, 1, 18, COLS - 2);
 
     if (ch == ERR) {
       napms(25);
@@ -176,13 +191,15 @@ int main(void)
       break;
     case 10:
       form_driver(qsoform->form, REQ_VALIDATION);
-      mvprintw(0, 0, "Timestamp: '%s'\nMode: '%s'\nBand: '%s'\nCallsign: '%s'\nRSTs: '%s'\nRSTr: '%s'\n",
-               field_buffer(qsoform->field[QSOF_TIMESTAMP], 0),
-               field_buffer(qsoform->field[QSOF_MODE], 0),
-               field_buffer(qsoform->field[QSOF_BAND], 0),
-               field_buffer(qsoform->field[QSOF_CALLSIGN], 0),
-               field_buffer(qsoform->field[QSOF_RSTSENT], 0),
-               field_buffer(qsoform->field[QSOF_RSTRCVD], 0));
+      sprintf(qsolist,
+              "%s%s %s%s%s%s%s\n",
+              qsolist,
+              field_buffer(qsoform->field[QSOF_TIMESTAMP], 0),
+              field_buffer(qsoform->field[QSOF_MODE], 0),
+              field_buffer(qsoform->field[QSOF_BAND], 0),
+              field_buffer(qsoform->field[QSOF_CALLSIGN], 0),
+              field_buffer(qsoform->field[QSOF_RSTSENT], 0),
+              field_buffer(qsoform->field[QSOF_RSTRCVD], 0));
 
       form_driver(qsoform->form, REQ_LAST_FIELD);
       form_driver(qsoform->form, REQ_CLR_FIELD);
