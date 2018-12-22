@@ -4,7 +4,7 @@
 #include <unistd.h>
 
 #include <form.h>
-#include <ncurses.h>
+#include <panel.h>
 
 #include "config.h"
 
@@ -31,6 +31,7 @@ typedef struct {
   FIELD *field[QSOF_MAX + 1];
   FORM *form;
   WINDOW *win;
+  PANEL *panel;
 } qsoform_t;
 
 
@@ -76,6 +77,8 @@ qsoform_t *new_qsoform() {
   obj->win = newwin(rows + 2, COLS - 3, 20, 1);
   keypad(obj->win, TRUE);
 
+  obj->panel = new_panel(obj->win);
+
   set_form_win(obj->form, obj->win);
   set_form_sub(obj->form, derwin(obj->win, rows, cols + 1, 1, 1));
 
@@ -92,9 +95,6 @@ qsoform_t *new_qsoform() {
   mvwprintw(obj->win, 1, 47, "Sent");
   mvwprintw(obj->win, 1, 52, "Rcvd");
   wattroff(obj->win, COLOR_PAIR(2) | A_BOLD);
-
-  refresh();
-  wrefresh(obj->win);
 
   return obj;
 }
@@ -118,7 +118,6 @@ void free_qsoform(qsoform_t *obj) {
 }
 
 
-
 int main(void)
 {
   qsoform_t *qsoform;
@@ -140,8 +139,6 @@ int main(void)
   //bkgd(COLOR_PAIR(1));
 
   qsoform = new_qsoform();
-  wrefresh(qsoform->win);
-  refresh();
 
   while (1) {
     ch = getch();
@@ -150,7 +147,6 @@ int main(void)
     timeinfo = localtime(&rawtime);
     strftime(buf, sizeof(buf) - 1, "%Y %b %d %H:%M", timeinfo);
     set_field_buffer(qsoform->field[QSOF_TIMESTAMP], 0, buf);
-    wrefresh(qsoform->win);
 
     if (ch == ERR) {
       continue;
@@ -200,6 +196,10 @@ int main(void)
       form_driver(qsoform->form, ch);
       break;
     }
+
+    /* Refresh UI. */
+    update_panels();
+    doupdate();
   }
 
  quit:
