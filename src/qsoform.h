@@ -28,7 +28,7 @@ typedef struct qsoFormField_s {
 } qsoFormField;
 
 
-typedef struct qsoForm_s {
+typedef struct qsoFormComponent_s {
   FIELD  *field[QFFT_MAX + 1];
   FORM   *form;
   WINDOW *window;
@@ -36,7 +36,8 @@ typedef struct qsoForm_s {
 } qsoFormComponent;
 
 
-extern qsoFormField qsoFormFieldDesc[QFFT_MAX];
+extern qsoFormField qso_form_field[QFFT_MAX];
+extern qsoFormComponent *qso_form;
 
 
 qsoFormComponent *newQsoFormComponent(void);
