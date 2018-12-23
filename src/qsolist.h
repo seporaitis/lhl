@@ -12,10 +12,18 @@ typedef struct qsoListComponent_s {
 } qsoListComponent;
 
 
+extern qsoListComponent *qso_list;
+
+
 qsoListComponent *newQsoListComponent(void);
 void initQsoListComponent(qsoListComponent *co);
 void refreshQsoListComponent(qsoListComponent *co);
 void freeQsoListComponent(qsoListComponent *co);
+
+void addQsoListComponentItem(qsoListComponent *co, struct tm *timeinfo,
+                             const char *mode, const char *band,
+                             const char *callsign, const char *rstsent,
+                             const char *rstrcvd);
 
 
 #endif // __qsolist_h__

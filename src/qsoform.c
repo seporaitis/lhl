@@ -6,9 +6,10 @@
 
 #include "config.h"
 #include "qsoform.h"
+#include "qsolist.h"
 
 
-qsoFormField qsoFormFieldDesc[QFFT_MAX] = {
+qsoFormField qso_form_field[QFFT_MAX] = {
   {
     .type_id = QFFT_TIMESTAMP,
     .label = "Date        Time",
@@ -78,6 +79,9 @@ qsoFormField qsoFormFieldDesc[QFFT_MAX] = {
 };
 
 
+qsoFormComponent *qso_form;
+
+
 qsoFormComponent *newQsoFormComponent(void) {
   return (qsoFormComponent *)malloc(sizeof(qsoFormComponent));
 }
@@ -89,14 +93,14 @@ void initQsoFormComponent(qsoFormComponent *co) {
   init_pair(QSOFORMPANEL_COLOR_PAIR, COLOR_WHITE, COLOR_BLACK);
 
   for (ii = 0; ii < QFFT_MAX; ii++) {
-    co->field[ii] = new_field(qsoFormFieldDesc[ii].height,
-                                 qsoFormFieldDesc[ii].width,
-                                 qsoFormFieldDesc[ii].top,
-                                 qsoFormFieldDesc[ii].left,
-                                 0, 0);
-    set_field_opts(co->field[ii], qsoFormFieldDesc[ii].options);
-    set_field_back(co->field[ii], qsoFormFieldDesc[ii].bgcolor);
-    set_field_fore(co->field[ii], qsoFormFieldDesc[ii].fgcolor);
+    co->field[ii] = new_field(qso_form_field[ii].height,
+                              qso_form_field[ii].width,
+                              qso_form_field[ii].top,
+                              qso_form_field[ii].left,
+                              0, 0);
+    set_field_opts(co->field[ii], qso_form_field[ii].options);
+    set_field_back(co->field[ii], qso_form_field[ii].bgcolor);
+    set_field_fore(co->field[ii], qso_form_field[ii].fgcolor);
   }
 
   co->field[QFFT_MAX] = NULL;
@@ -119,7 +123,7 @@ void initQsoFormComponent(qsoFormComponent *co) {
 
   wattron(co->window, COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR) | A_BOLD);
   for (ii = 0; ii < QFFT_MAX; ii++) {
-    mvwprintw(co->window, 1, qsoFormFieldDesc[ii].left + 1, qsoFormFieldDesc[ii].label);
+    mvwprintw(co->window, 1, qso_form_field[ii].left + 1, qso_form_field[ii].label);
   }
   wattroff(co->window, COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR) | A_BOLD);
 }
@@ -141,6 +145,12 @@ void refreshQsoFormComponent(qsoFormComponent *co) {
 
 
 void processQsoFormComponentInput(qsoFormComponent *co, int ch) {
+  time_t rawtime;
+  struct tm *timeinfo;
+
+  time(&rawtime);
+  timeinfo = localtime(&rawtime);
+
   switch (ch) {
     case KEY_RIGHT:
     case '\t':
@@ -154,6 +164,30 @@ void processQsoFormComponentInput(qsoFormComponent *co, int ch) {
     case KEY_BACKSPACE:
       form_driver(co->form, REQ_DEL_PREV);
       form_driver(co->form, REQ_END_LINE);
+      break;
+    case 10:
+      // TODO(JS): this should eventually go to the respective forms
+      form_driver(co->form, REQ_VALIDATION);
+
+      addQsoListComponentItem(qso_list, timeinfo,
+                              field_buffer(co->field[QFFT_MODE], 0),
+                              field_buffer(co->field[QFFT_BAND], 0),
+                              field_buffer(co->field[QFFT_CALLSIGN], 0),
+                              field_buffer(co->field[QFFT_RSTSENT], 0),
+                              field_buffer(co->field[QFFT_RSTRCVD], 0));
+
+      form_driver(co->form, REQ_LAST_FIELD);
+      form_driver(co->form, REQ_CLR_FIELD);
+      form_driver(co->form, REQ_PREV_FIELD);
+      form_driver(co->form, REQ_CLR_FIELD);
+      form_driver(co->form, REQ_PREV_FIELD);
+      form_driver(co->form, REQ_CLR_FIELD);
+      form_driver(co->form, REQ_PREV_FIELD);
+      form_driver(co->form, REQ_CLR_FIELD);
+      form_driver(co->form, REQ_PREV_FIELD);
+      form_driver(co->form, REQ_CLR_FIELD);
+      form_driver(co->form, REQ_PREV_FIELD);
+      form_driver(co->form, REQ_CLR_FIELD);
       break;
     default:
       form_driver(co->form, ch);

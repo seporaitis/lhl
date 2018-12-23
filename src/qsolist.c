@@ -1,10 +1,14 @@
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include <panel.h>
 
 #include "config.h"
 #include "qsolist.h"
+
+
+qsoListComponent *qso_list;
 
 
 qsoListComponent *newQsoListComponent(void) {
@@ -40,4 +44,17 @@ void freeQsoListComponent(qsoListComponent *co) {
   delwin(co->window);
 
   free(co);
+}
+
+
+void addQsoListComponentItem(qsoListComponent *co, struct tm *timeinfo,
+                             const char *mode, const char *band,
+                             const char *callsign, const char *rstsent,
+                             const char *rstrcvd) {
+  char timestr[32] = { 0 };
+
+  strftime(timestr, sizeof(timestr) - 1, "%Y %b %d %H:%M ", timeinfo);
+
+  sprintf(co->buffer, "%s%s%s%s%s%s%s\n", co->buffer, timestr, mode, band,
+          callsign, rstsent, rstrcvd);
 }
