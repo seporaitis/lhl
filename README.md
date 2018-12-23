@@ -2,12 +2,26 @@
 
 An attempt at writing a ham radio logging software.
 
+# Requirements
+
+- `ncurses`
+- `autoconf`
+- `automake`
+
+# Compile & Run
+
+```
+autoreconf -i
+./configure
+make
+src/lylog
+```
 
 # Ethos
 
 Start simple and gradually add additional features if there is an interest.
 
-# Features
+# Ideas
 
 List of minimum requirements:
 
