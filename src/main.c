@@ -8,43 +8,46 @@
 
 #include "config.h"
 #include "qsoform.h"
+#include "qsolist.h"
 
 
-int main(void)
-{
-  qsoFormComponent *qso_form;
-  PANEL *panel;
-  WINDOW *win, *pad;
-  int ch;
-  char qsolist[2048] = {0};
-
-  /* Initialize ncurses. */
+void initializeNcurses(void) {
   initscr();
   start_color();
   cbreak();
   noecho();
   keypad(stdscr, TRUE);
   nodelay(stdscr, TRUE);
+}
+
+
+void refreshNcurses(void) {
+  update_panels();
+  doupdate();
+}
+
+
+int main(void)
+{
+  qsoFormComponent *qso_form;
+  qsoListComponent *qso_list;
+  int ch;
+
+  initializeNcurses();
 
   qso_form = newQsoFormComponent();
   initQsoFormComponent(qso_form);
 
-  win = newwin(20, COLS, 0, 0);
-  keypad(win, TRUE);
-  panel = new_panel(win);
-  box(win, 0, 0);
-  pad = newpad(18, COLS - 2);
-  touchwin(win);
+  qso_list = newQsoListComponent();
+  initQsoListComponent(qso_list);
 
   while (1) {
     ch = getch();
 
     /* Refresh UI. */
     refreshQsoFormComponent(qso_form);
-    mvwprintw(pad, 0, 0, qsolist);
-    update_panels();
-    doupdate();
-    prefresh(pad, 0, 0, 1, 1, 18, COLS - 2);
+    refreshQsoListComponent(qso_list);
+    refreshNcurses();
 
     if (ch == ERR) {
       napms(25);
@@ -56,10 +59,11 @@ int main(void)
       goto quit;
       break;
     case 10:
+      // TODO(JS): this should eventually go to the respective forms
       form_driver(qso_form->form, REQ_VALIDATION);
-      sprintf(qsolist,
+      sprintf(qso_list->buffer,
               "%s%s %s%s%s%s%s\n",
-              qsolist,
+              qso_list->buffer,
               field_buffer(qso_form->field[QFFT_TIMESTAMP], 0),
               field_buffer(qso_form->field[QFFT_MODE], 0),
               field_buffer(qso_form->field[QFFT_BAND], 0),
