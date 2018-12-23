@@ -134,6 +134,9 @@ void refreshQsoFormComponent(qsoFormComponent *co) {
   timeinfo = localtime(&rawtime);
   strftime(timestr, sizeof(timestr) - 1, "%Y %b %d %H:%M", timeinfo);
   set_field_buffer(co->field[QFFT_TIMESTAMP], 0, timestr);
+
+  set_field_buffer(co->field[QFFT_BAND], 0, "40M");
+  set_field_buffer(co->field[QFFT_MODE], 0, "CW");
 }
 
 
