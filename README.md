@@ -8,7 +8,7 @@ An attempt at writing a ham radio logging software.
 - `autoconf`
 - `automake`
 
-# Compilation
+# Compile & Run
 
 ```
 autoreconf -i
