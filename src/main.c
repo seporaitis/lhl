@@ -93,6 +93,7 @@ int main(void)
 
  quit:
   freeQsoFormComponent(qso_form);
+  freeQsoListComponent(qso_list);
 
   endwin();
 
