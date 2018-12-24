@@ -1,6 +1,6 @@
-# lylog
+# Linux Ham Log
 
-An attempt at writing a ham radio logging software.
+An attempt at writing a modern terminal ham radio logging software for Linux from scratch.
 
 # Requirements
 
@@ -14,7 +14,7 @@ An attempt at writing a ham radio logging software.
 autoreconf -i
 ./configure
 make
-src/lylog
+src/lhl
 ```
 
 # Ethos

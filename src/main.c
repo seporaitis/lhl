@@ -21,6 +21,15 @@ void initializeNcurses(void) {
 }
 
 
+void initializeComponents(void) {
+  qso_form = newQsoFormComponent();
+  initQsoFormComponent(qso_form);
+
+  qso_list = newQsoListComponent();
+  initQsoListComponent(qso_list);
+}
+
+
 void refreshNcurses(void) {
   update_panels();
   doupdate();
@@ -32,17 +41,18 @@ void uninitializeNcurses(void) {
 }
 
 
+void uninitializeComponents(void) {
+  freeQsoFormComponent(qso_form);
+  freeQsoListComponent(qso_list);
+}
+
+
 int main(void)
 {
   int ch;
 
   initializeNcurses();
-
-  qso_form = newQsoFormComponent();
-  initQsoFormComponent(qso_form);
-
-  qso_list = newQsoListComponent();
-  initQsoListComponent(qso_list);
+  initializeComponents();
 
   while (1) {
     ch = getch();
@@ -69,9 +79,7 @@ int main(void)
   }
 
  quit:
-  freeQsoFormComponent(qso_form);
-  freeQsoListComponent(qso_list);
-
+  uninitializeComponents();
   uninitializeNcurses();
 
   return 0;
