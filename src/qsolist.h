@@ -1,14 +1,14 @@
 #ifndef __qsolist_h__
 #define __qsolist_h__
 
-#define QSOFORMPANEL_COLOR_PAIR 1
+#define QSOLISTCOMPONENT_COLOR_PAIR 2
 
 
 typedef struct qsoListComponent_s {
   PANEL  *panel;
   WINDOW *window;
   WINDOW *pad;
-  char    buffer[2048];
+  char    buffer[4096];
 } qsoListComponent;
 
 

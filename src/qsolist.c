@@ -5,6 +5,7 @@
 #include <panel.h>
 
 #include "config.h"
+#include "qsoform.h"
 #include "qsolist.h"
 
 
@@ -13,26 +14,37 @@ qsoListComponent *qso_list;
 
 qsoListComponent *newQsoListComponent(void) {
   qsoListComponent *co = (qsoListComponent *)malloc(sizeof(qsoListComponent));
-  memset((void *)co->buffer, 0, 2048);
+  memset((void *)co->buffer, 0, 4096);
 
   return co;
 }
 
 
 void initQsoListComponent(qsoListComponent *co) {
-  co->window = newwin(20, COLS, 0, 0);
+  int ii;
+
+  init_pair(QSOLISTCOMPONENT_COLOR_PAIR, COLOR_WHITE, COLOR_BLACK);
+
+  co->window = newwin(LINES - 4, COLS, 0, 0);
   keypad(co->window, TRUE);
 
   co->panel = new_panel(co->window);
   box(co->window, 0, 0);
-  co->pad = newpad(18, COLS - 2);
+
+  wattron(co->window, COLOR_PAIR(QSOLISTCOMPONENT_COLOR_PAIR) | A_BOLD);
+  for (ii = 0; ii < QFFT_MAX; ii++) {
+    mvwprintw(co->window, 1, qso_form_field[ii].left + 1, qso_form_field[ii].label);
+  }
+  wattroff(co->window, COLOR_PAIR(QSOLISTCOMPONENT_COLOR_PAIR) | A_BOLD);
+
+  co->pad = newpad(LINES - 7, COLS - 3);
   touchwin(co->window);
 }
 
 
 void refreshQsoListComponent(qsoListComponent *co) {
   mvwprintw(co->pad, 0, 0, co->buffer);
-  prefresh(co->pad, 0, 0, 1, 1, 18, COLS - 2);
+  prefresh(co->pad, 0, 0, 2, 2, LINES - 6, COLS - 3);
 }
 
 
@@ -55,6 +67,6 @@ void addQsoListComponentItem(qsoListComponent *co, struct tm *timeinfo,
 
   strftime(timestr, sizeof(timestr) - 1, "%Y %b %d %H:%M ", timeinfo);
 
-  sprintf(co->buffer, "%s%s%s%s%s%s%s\n", co->buffer, timestr, mode, band,
+  sprintf(co->buffer, "%s%s %s %s %s %s %s\n", co->buffer, timestr, mode, band,
           callsign, rstsent, rstrcvd);
 }

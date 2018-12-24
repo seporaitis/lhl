@@ -17,8 +17,8 @@ qsoFormField qso_form_field[QFFT_MAX] = {
     .height = 1,
     .top = 1,
     .left = 1,
-    .bgcolor = COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR),
-    .fgcolor = COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR),
+    .bgcolor = COLOR_PAIR(QSOFORMCOMPONENT_COLOR_PAIR),
+    .fgcolor = COLOR_PAIR(QSOFORMCOMPONENT_COLOR_PAIR),
     .options = O_PUBLIC | O_STATIC | O_VISIBLE,
   },
   {
@@ -28,8 +28,8 @@ qsoFormField qso_form_field[QFFT_MAX] = {
     .height = 1,
     .top = 1,
     .left = 20,
-    .bgcolor = COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR),
-    .fgcolor = COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR),
+    .bgcolor = COLOR_PAIR(QSOFORMCOMPONENT_COLOR_PAIR),
+    .fgcolor = COLOR_PAIR(QSOFORMCOMPONENT_COLOR_PAIR),
     .options = O_PUBLIC | O_STATIC | O_VISIBLE,
   },
   {
@@ -39,8 +39,8 @@ qsoFormField qso_form_field[QFFT_MAX] = {
     .height = 1,
     .top = 1,
     .left = 26,
-    .bgcolor = COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR),
-    .fgcolor = COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR),
+    .bgcolor = COLOR_PAIR(QSOFORMCOMPONENT_COLOR_PAIR),
+    .fgcolor = COLOR_PAIR(QSOFORMCOMPONENT_COLOR_PAIR),
     .options = O_PUBLIC | O_STATIC | O_VISIBLE,
   },
   {
@@ -50,8 +50,8 @@ qsoFormField qso_form_field[QFFT_MAX] = {
     .height = 1,
     .top = 1,
     .left = 35,
-    .bgcolor = COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR),
-    .fgcolor = COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR),
+    .bgcolor = COLOR_PAIR(QSOFORMCOMPONENT_COLOR_PAIR),
+    .fgcolor = COLOR_PAIR(QSOFORMCOMPONENT_COLOR_PAIR),
     .options = O_PUBLIC | O_STATIC | O_VISIBLE | O_EDIT | O_ACTIVE,
   },
   {
@@ -61,8 +61,8 @@ qsoFormField qso_form_field[QFFT_MAX] = {
     .height = 1,
     .top = 1,
     .left = 46,
-    .bgcolor = COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR),
-    .fgcolor = COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR),
+    .bgcolor = COLOR_PAIR(QSOFORMCOMPONENT_COLOR_PAIR),
+    .fgcolor = COLOR_PAIR(QSOFORMCOMPONENT_COLOR_PAIR),
     .options = O_PUBLIC | O_STATIC | O_VISIBLE | O_EDIT | O_ACTIVE,
   },
   {
@@ -72,8 +72,8 @@ qsoFormField qso_form_field[QFFT_MAX] = {
     .height = 1,
     .top = 1,
     .left = 51,
-    .bgcolor = COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR),
-    .fgcolor = COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR),
+    .bgcolor = COLOR_PAIR(QSOFORMCOMPONENT_COLOR_PAIR),
+    .fgcolor = COLOR_PAIR(QSOFORMCOMPONENT_COLOR_PAIR),
     .options = O_PUBLIC | O_STATIC | O_VISIBLE | O_EDIT | O_ACTIVE,
   },
 };
@@ -90,7 +90,7 @@ qsoFormComponent *newQsoFormComponent(void) {
 void initQsoFormComponent(qsoFormComponent *co) {
   int cols, rows, ii;
 
-  init_pair(QSOFORMPANEL_COLOR_PAIR, COLOR_WHITE, COLOR_BLACK);
+  init_pair(QSOFORMCOMPONENT_COLOR_PAIR, COLOR_WHITE, COLOR_BLACK);
 
   for (ii = 0; ii < QFFT_MAX; ii++) {
     co->field[ii] = new_field(qso_form_field[ii].height,
@@ -109,7 +109,7 @@ void initQsoFormComponent(qsoFormComponent *co) {
 
   scale_form(co->form, &rows, &cols);
 
-  co->window = newwin(rows + 2, COLS, 20, 0);
+  co->window = newwin(rows + 2, COLS, LINES - rows - 2, 0);
   keypad(co->window, TRUE);
 
   box(co->window, 0, 0);
@@ -121,11 +121,11 @@ void initQsoFormComponent(qsoFormComponent *co) {
 
   post_form(co->form);
 
-  wattron(co->window, COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR) | A_BOLD);
+  wattron(co->window, COLOR_PAIR(QSOFORMCOMPONENT_COLOR_PAIR) | A_BOLD);
   for (ii = 0; ii < QFFT_MAX; ii++) {
     mvwprintw(co->window, 1, qso_form_field[ii].left + 1, qso_form_field[ii].label);
   }
-  wattroff(co->window, COLOR_PAIR(QSOFORMPANEL_COLOR_PAIR) | A_BOLD);
+  wattroff(co->window, COLOR_PAIR(QSOFORMCOMPONENT_COLOR_PAIR) | A_BOLD);
 }
 
 
