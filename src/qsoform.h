@@ -1,7 +1,10 @@
 #ifndef __qsoform_h__
 #define __qsoform_h__
 
-#define QSOFORMPANEL_COLOR_PAIR 1
+#include <form.h>
+
+
+#define QSOFORMCOMPONENT_COLOR_PAIR 1
 
 
 typedef enum qsoFormFieldType_e {
