@@ -1,5 +1,7 @@
 # Linux Ham Log
 
+[![Build Status](https://travis-ci.org/seporaitis/lhl.svg?branch=master)](https://travis-ci.org/seporaitis/lhl)
+
 An attempt at writing a modern terminal ham radio logging software for Linux from scratch.
 
 # Requirements
