@@ -1,4 +1,4 @@
-AC_INIT([lylog], [0.1], [julius@seporaitis.net])
+AC_INIT([lhl], [0.0.1], [seporaitis@users.noreply.github.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC
 AC_CONFIG_HEADERS([config.h])
@@ -6,7 +6,7 @@ AC_CONFIG_HEADERS([config.h])
 MP_WITH_CURSES
 HAVE_CURS=$mp_cv_curses
 if test x$HAVE_CURS != xyes; then
-  AC_MSG_ERROR([lylog requires the curses or ncurses library. Please install before compiling lylog.])
+  AC_MSG_ERROR([Linux Ham Log requires ncurses library to compile.])
 fi
 
 AC_CONFIG_FILES([
