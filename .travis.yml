@@ -1,4 +1,7 @@
 language: c
+env:
+  global:
+  - CODECOV_TOKEN: a3f20f77-117b-47f4-ba11-19de49099a25
 compiler:
 - clang
 - gcc
@@ -6,3 +9,5 @@ before_script:
 - autoreconf -i
 script:
 - ./configure && make
+after_success:
+- bash <(curl -s https://codecov.io/bash)
