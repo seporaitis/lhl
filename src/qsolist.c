@@ -57,7 +57,7 @@ void refreshQsoListComponent(qsoListComponent *co) {
   }
 
   buffer = malloc(sizeof(char) * totalsize + 2);
-  memset(buffer, 0, totalsize + 2);
+  memset(buffer, 0, sizeof(char) * totalsize + 2);
   ptr = buffer;
 
   for (ii = 0; ii < co->numitems; ii++) {
