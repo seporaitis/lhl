@@ -9,5 +9,6 @@ before_script:
 - autoreconf -i
 script:
 - ./configure && make
+- gcov src/main.c src/qsolist.c src/qsoform.c
 after_success:
 - bash <(curl -s https://codecov.io/bash)
