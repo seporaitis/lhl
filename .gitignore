@@ -69,5 +69,10 @@ stamp-h1
 .deps
 .bmdata.dat
 
-# Lylog binaries
+# Gcov
+*.gcov
+*.gcno
+*.gcda
+
+# Linux Ham Log binaries
 src/lhl
