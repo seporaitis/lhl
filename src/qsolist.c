@@ -39,7 +39,7 @@ void initQsoListComponent(qsoListComponent *co) {
   }
   wattroff(co->window, COLOR_PAIR(QSOLISTCOMPONENT_COLOR_PAIR) | A_BOLD);
 
-  co->pad = newpad(LINES - 7, COLS - 3);
+  co->pad = newpad(1024, COLS - 3);
   touchwin(co->window);
 }
 
@@ -73,12 +73,10 @@ void refreshQsoListComponent(qsoListComponent *co) {
 void processQsoListComponentInput(qsoListComponent *co, int ch) {
   switch (ch) {
   case KEY_UP:
-    co->cursor--;
-    if (co->cursor < 0) co->cursor = 0;
+    if (co->cursor > 0) co->cursor--;
     break;
   case KEY_DOWN:
-    co->cursor++;
-    if (co->cursor >= co->numitems) co->cursor = co->numitems;
+    if (co->cursor + LINES - 7 < co->numitems) co->cursor++;
     break;
   }
 }
