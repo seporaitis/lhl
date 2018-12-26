@@ -45,8 +45,8 @@ void initQsoListComponent(qsoListComponent *co) {
 
 
 void refreshQsoListComponent(qsoListComponent *co) {
-  int ii, idx = 0, totalsize = 0;
-  char *buffer;
+  int ii, totalsize = 0;
+  char *buffer, *ptr;
 
   for (ii = 0; ii < co->numitems; ii++) {
     totalsize += co->item[ii].length + 1;
@@ -54,12 +54,13 @@ void refreshQsoListComponent(qsoListComponent *co) {
 
   buffer = malloc(sizeof(char) * totalsize + 2);
   memset(buffer, 0, totalsize + 2);
+  ptr = buffer;
 
   for (ii = 0; ii < co->numitems; ii++) {
-    memcpy(&buffer[idx], co->item[ii].buffer, co->item[ii].length);
-    idx += co->item[ii].length;
-    buffer[idx] = '\n';
-    idx++;
+    memcpy(ptr, co->item[ii].buffer, co->item[ii].length);
+    ptr += co->item[ii].length;
+    *ptr = '\n';
+    ptr++;
   }
 
   mvwprintw(co->pad, 0, 0, buffer);
