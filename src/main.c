@@ -73,6 +73,7 @@ int main(void)
       break;
     default:
       processQsoFormComponentInput(qso_form, ch);
+      processQsoListComponentInput(qso_list, ch);
       break;
     }
 
