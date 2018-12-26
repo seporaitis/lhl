@@ -9,6 +9,10 @@
 #include "qsolist.h"
 
 
+#define QSOLISTCOMPONENT_PAD_ROWS (LINES - 6)
+#define QSOLISTCOMPONENT_PAD_COLS (COLS - 3)
+
+
 qsoListComponent *qso_list;
 
 
@@ -39,7 +43,7 @@ void initQsoListComponent(qsoListComponent *co) {
   }
   wattroff(co->window, COLOR_PAIR(QSOLISTCOMPONENT_COLOR_PAIR) | A_BOLD);
 
-  co->pad = newpad(1024, COLS - 3);
+  co->pad = newpad(1024, QSOLISTCOMPONENT_PAD_COLS);
   touchwin(co->window);
 }
 
@@ -64,7 +68,8 @@ void refreshQsoListComponent(qsoListComponent *co) {
   }
 
   mvwprintw(co->pad, 0, 0, buffer);
-  prefresh(co->pad, co->cursor, 0, 2, 2, LINES - 6, COLS - 3);
+  prefresh(co->pad, co->cursor, 0,
+           2, 2, QSOLISTCOMPONENT_PAD_ROWS, QSOLISTCOMPONENT_PAD_COLS);
 
   free(buffer);
 }
@@ -76,7 +81,7 @@ void processQsoListComponentInput(qsoListComponent *co, int ch) {
     if (co->cursor > 0) co->cursor--;
     break;
   case KEY_DOWN:
-    if (co->cursor + LINES - 7 < co->numitems) co->cursor++;
+    if (co->cursor + QSOLISTCOMPONENT_PAD_ROWS - 1 < co->numitems) co->cursor++;
     break;
   }
 }
@@ -110,8 +115,8 @@ void addQsoListComponentItem(qsoListComponent *co, struct tm *timeinfo,
   char timestr[32] = { 0 };
   strftime(timestr, sizeof(timestr) - 1, "%Y %b %d %H:%M ", timeinfo);
 
-  co->item[co->numitems].buffer = malloc(sizeof(char) * (COLS - 3));
-  memset(co->item[co->numitems].buffer, 0, sizeof(char) * (COLS - 3));
+  co->item[co->numitems].buffer = malloc(sizeof(char) * QSOLISTCOMPONENT_PAD_COLS);
+  memset(co->item[co->numitems].buffer, 0, sizeof(char) * QSOLISTCOMPONENT_PAD_COLS);
   snprintf(co->item[co->numitems].buffer, COLS,
            "%s %s %s %s %s %s",
            timestr, mode, band, callsign, rstsent, rstrcvd);
