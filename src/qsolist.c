@@ -123,4 +123,7 @@ void addQsoListComponentItem(qsoListComponent *co, struct tm *timeinfo,
   co->item[co->numitems].length = strlen(co->item[co->numitems].buffer);
 
   co->numitems++;
+  if (co->numitems - QSOLISTCOMPONENT_PAD_ROWS + 1 > 0) {
+    co->cursor = (co->numitems - QSOLISTCOMPONENT_PAD_ROWS + 1);
+  }
 }
