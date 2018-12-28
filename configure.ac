@@ -9,7 +9,7 @@ if test x$HAVE_CURS != xyes; then
   AC_MSG_ERROR([Linux Ham Log requires ncurses library to compile.])
 fi
 
-AX_LIB_SQLITE3(3.20)
+AX_LIB_SQLITE3()
 if test "x$success" != "xyes"; then
   AC_MSG_ERROR([Linux Ham Log requires SQLite3 to compile.])
 fi
