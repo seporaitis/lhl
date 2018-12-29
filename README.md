@@ -9,6 +9,7 @@ An attempt at writing a modern terminal ham radio logging software for Linux fro
 - `ncurses`
 - `autoconf`
 - `automake`
+- `libsqlite3-dev`
 
 # Compile & Run
 
