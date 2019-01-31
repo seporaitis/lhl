@@ -7,6 +7,7 @@
 #include <panel.h>
 
 #include "config.h"
+#include "callbook.h"
 #include "qsoform.h"
 #include "qsolist.h"
 
@@ -27,6 +28,9 @@ void initializeComponents(void) {
 
   qso_list = newQsoListComponent();
   initQsoListComponent(qso_list);
+
+  callbook = newCallbookComponent();
+  initCallbookComponent(callbook);
 }
 
 
@@ -44,6 +48,7 @@ void uninitializeNcurses(void) {
 void uninitializeComponents(void) {
   freeQsoFormComponent(qso_form);
   freeQsoListComponent(qso_list);
+  freeCallbookComponent(callbook);
 }
 
 
